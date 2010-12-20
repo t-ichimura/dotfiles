@@ -7,3 +7,12 @@
 [submodule "bundle/vim-pathogen"]
 	path = bundle/vim-pathogen
 	url = git://github.com/tpope/vim-pathogen.git
+[submodule "vimfiles/bundle/zencoding-vim"]
+	path = vimfiles/bundle/zencoding-vim
+	url = https://github.com/mattn/zencoding-vim.git
+[submodule "vimfiles/bundle/neocomplcache"]
+	path = vimfiles/bundle/neocomplcache
+	url = https://github.com/Shougo/neocomplcache.git
+[submodule "vimfiles/bundle/vim-surround"]
+	path = vimfiles/bundle/vim-surround
+	url = https://github.com/tpope/vim-surround.git
