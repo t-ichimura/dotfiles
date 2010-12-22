@@ -22,3 +22,6 @@
 [submodule "vimfiles/bundle/skk.vim"]
 	path = vimfiles/bundle/skk.vim
 	url = https://github.com/tyru/skk.vim.git
+[submodule "vimfiles/bundle/nerdcommenter"]
+	path = vimfiles/bundle/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter.git

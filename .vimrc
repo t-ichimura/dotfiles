@@ -139,8 +139,8 @@ endif
 set ruler
 "括弧の対応表示時間
 set showmatch matchtime=1
-"タブを設定
-set ts=4 sw=4 sts=4
+"<TAB>の表示幅とインデント及び<TAB>,<BS>での移動幅を設定
+"set ts=4 sw=4 sts=4
 "自動的にインデントする
 set autoindent
 "Cインデントの設定
@@ -174,9 +174,9 @@ endif
 "iconvが使用可能の場合、カーソル上の文字コードをエンコードに応じた表示にするFencB()を使用
 """"""""""""""""""""""""""""""
 if has('iconv')
-  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=[0x%{FencB()}]\ (%v,%l)/%L%8P\ 
+  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=[0x%{FencB()}]\ (%v,%l)/%L%8P\ 
 else
-  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=\ (%v,%l)/%L%8P\ 
+  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=\ (%v,%l)/%L%8P\ 
 endif
 
 "FencB() : カーソル上の文字コードをエンコードに応じた表示にする
@@ -236,13 +236,6 @@ function! MyPatch()
 endfunction
 
 "----------------------------------------
-" 共通
-"----------------------------------------
-"<Ctrl-J>に<Esc>を割り当て
-noremap <C-J> <Esc>
-cnoremap <C-J> <Esc>
-
-"----------------------------------------
 " ノーマルモード
 "----------------------------------------
 "<Ctrl-J>に<Esc>を割り当て
@@ -282,12 +275,19 @@ vnoremap <C-J> <Esc>
 "----------------------------------------
 " コマンドモード
 "----------------------------------------
-"<Ctrl-J>に<Esc>を割り当て
-cnoremap <C-J> <Esc>
 
 "----------------------------------------
 " Vimスクリプト
 "----------------------------------------
+""""""""""""""""""""""""""""""
+"ノーマルモードではIME使用不可にする
+""""""""""""""""""""""""""""""
+augroup ImeMode
+    autocmd!
+    autocmd InsertEnter,CmdwinEnter * set noimdisable
+    autocmd InsertLeave,CmdwinLeave * set imdisable
+augroup END
+
 """"""""""""""""""""""""""""""
 "ファイルを開いたら前回のカーソル位置へ移動
 "$VIMRUNTIME/vimrc_example.vim
@@ -355,13 +355,13 @@ endif
 """"""""""""""""""""""""""""""
 "grep,tagsのためカレントディレクトリをファイルと同じディレクトリに移動する
 """"""""""""""""""""""""""""""
-"if exists('+autochdir')
-"  "autochdirがある場合カレントディレクトリを移動
-"  set autochdir
-"else
-"  "autochdirが存在しないが、カレントディレクトリを移動したい場合
-"  au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
-"endif
+if exists('+autochdir')
+  "autochdirがある場合カレントディレクトリを移動
+  set autochdir
+else
+  "autochdirが存在しないが、カレントディレクトリを移動したい場合
+  au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
+endif
 
 "----------------------------------------
 " 各種プラグイン設定
