@@ -287,6 +287,10 @@ augroup ImeMode
     autocmd InsertEnter,CmdwinEnter * set noimdisable
     autocmd InsertLeave,CmdwinLeave * set imdisable
 augroup END
+augroup imestatus
+  autocmd!
+  autocmd CursorMovedI * echo &iminsert
+augroup END
 
 """"""""""""""""""""""""""""""
 "ファイルを開いたら前回のカーソル位置へ移動
