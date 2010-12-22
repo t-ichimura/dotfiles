@@ -4,9 +4,6 @@
 [submodule "vimfiles/bundle/unite.vim"]
 	path = vimfiles/bundle/unite.vim
 	url = https://github.com/Shougo/unite.vim.git
-[submodule "bundle/vim-pathogen"]
-	path = bundle/vim-pathogen
-	url = git://github.com/tpope/vim-pathogen.git
 [submodule "vimfiles/bundle/zencoding-vim"]
 	path = vimfiles/bundle/zencoding-vim
 	url = https://github.com/mattn/zencoding-vim.git
@@ -19,3 +16,6 @@
 [submodule "vimfiles/bundle/quickbuf"]
 	path = vimfiles/bundle/quickbuf
 	url = https://github.com/vim-scripts/QuickBuf.git
+[submodule "vimfiles/bundle/quickrun"]
+	path = vimfiles/bundle/quickrun
+	url = https://github.com/ujihisa/quickrun.git

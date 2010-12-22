@@ -64,7 +64,7 @@ set noswapfile
 "viminfoを作成しない
 "set viminfo=
 "クリップボードを共有
-set clipboard+=unnamed
+set clipboard-=unnamed
 "8進数を無効にする。<C-a>,<C-x>に影響する
 set nrformats-=octal
 "キーコードやマッピングされたキー列が完了するのを待つ時間(ミリ秒)
@@ -75,6 +75,7 @@ set hidden
 set history=50
 "日本語の行の連結時には空白を入力しない
 set formatoptions+=mM
+autocmd FileType * set formatoptions-=ro
 "Visual blockモードでフリーカーソルを有効にする
 set virtualedit=block
 "カーソルキーで行末／行頭の移動可能に設定
@@ -83,8 +84,9 @@ set whichwrap=b,s,[,],<,>
 set backspace=indent,eol,start
 "□や○の文字があってもカーソル位置がずれないようにする
 set ambiwidth=double
-"コマンドライン補完するときに強化されたものを使う
-set wildmenu
+"コマンドライン補完は、候補一覧、次候補、次候補……最初となる
+set nowildmenu
+set wildmode=list:longest,full
 "マウスを有効にする
 if has('mouse')
   set mouse=a
@@ -100,7 +102,7 @@ filetype plugin indent on
 set ignorecase
 set smartcase
 "検索時にファイルの最後まで行ったら最初に戻る
-set wrapscan
+set nowrapscan
 "インクリメンタルサーチ
 set incsearch
 "検索文字の強調表示
@@ -132,7 +134,7 @@ endif
 "括弧の対応表示時間
 set showmatch matchtime=1
 "タブを設定
-"set ts=4 sw=4 sts=4
+set ts=4 sw=4 sts=4
 "自動的にインデントする
 set autoindent
 "Cインデントの設定
@@ -344,6 +346,9 @@ endif
 " pathogen
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
+
+" neocomplcache
+let g:neocomplcache_enable_at_startup = 1
 
 "----------------------------------------
 " 一時設定
