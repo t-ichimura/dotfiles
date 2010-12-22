@@ -75,7 +75,8 @@ set hidden
 set history=50
 "日本語の行の連結時には空白を入力しない
 set formatoptions+=mM
-autocmd FileType * set formatoptions-=ro
+set formatoptions-=ro
+"autocmd FileType * set formatoptions-=ro
 "Visual blockモードでフリーカーソルを有効にする
 set virtualedit=block
 "カーソルキーで行末／行頭の移動可能に設定
@@ -349,6 +350,9 @@ call pathogen#helptags()
 
 " neocomplcache
 let g:neocomplcache_enable_at_startup = 1
+
+" netrw
+let g:netrw_home = $HOME
 
 "----------------------------------------
 " 一時設定
