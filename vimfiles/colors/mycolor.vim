@@ -17,19 +17,26 @@ let g:colors_name = "mycolor"
 " GUI Comment : #80a0ff = Light blue
 
 " GUI
-highlight Normal     guifg=Grey80       guibg=Black
-highlight Search     guifg=Black        guibg=Red       gui=bold
-highlight Visual     guifg=Grey25
-highlight Cursor     guifg=Black        guibg=Green     gui=bold
-highlight Special    guifg=Orange
-highlight Comment    guifg=#80a0ff
-highlight StatusLine guifg=blue         guibg=white
-highlight Statement  guifg=Yellow                       gui=NONE
-highlight Type                                          gui=NONE
-highlight Pmenu      guifg=Black        guibg=Grey
-highlight PmenuSel                      guibg=DarkCyan
-highlight PmenuSbar                     guibg=LightGrey
-highlight PmenuThumb                    guibg=Grey50    gui=NONE
+highlight Normal       guifg=Grey80       guibg=Black
+highlight Search       guifg=Black        guibg=Red       gui=bold
+highlight Visual       guifg=Grey25
+highlight Cursor       guifg=Black        guibg=Green     gui=bold
+highlight Special      guifg=Orange
+highlight Comment      guifg=#80a0ff
+highlight StatusLine   guifg=blue         guibg=white
+highlight Statement    guifg=Yellow                       gui=NONE
+highlight Type                                            gui=NONE
+highlight Pmenu        guifg=Black        guibg=Grey
+highlight PmenuSel                        guibg=DarkCyan
+highlight PmenuSbar                       guibg=LightGrey
+highlight PmenuThumb                      guibg=Grey50    gui=NONE
+highlight CursorLine                      guibg=Grey10
+highlight CursorColumn                                    gui=underline
+"IMEÇÃèÛë‘ÇÉJÉâÅ[ï\é¶
+if has('multi_byte_ime')
+  highlight Cursor     guifg=NONE         guibg=Green
+  highlight CursorIM   guifg=NONE         guibg=Purple
+endif
 
 " Console
 highlight Normal     ctermfg=LightGrey  ctermbg=Black

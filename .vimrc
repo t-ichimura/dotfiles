@@ -52,14 +52,17 @@ scriptencoding cp932
 "set writebackupを指定してもオプション 'backup' がオンでない限り、
 "バックアップは上書きに成功した後に削除される。
 set nowritebackup
-"バックアップ/スワップファイルを作成する/しない
+"バックアップを作成しない
 set nobackup
+"バックアップ先を設定
+" set backupdir=$TEMP
 if version >= 703
   "再読込、vim終了後も継続するアンドゥ(7.3)
   "set undofile
   "アンドゥの保存場所(7.3)
   "set undodir=.
 endif
+"スワップファイルを作成しない
 set noswapfile
 "viminfoを作成しない
 "set viminfo=
@@ -75,8 +78,6 @@ set hidden
 set history=50
 "日本語の行の連結時には空白を入力しない
 set formatoptions+=mM
-set formatoptions-=ro
-"autocmd FileType * set formatoptions-=ro
 "Visual blockモードでフリーカーソルを有効にする
 set virtualedit=block
 "カーソルキーで行末／行頭の移動可能に設定
@@ -94,6 +95,8 @@ if has('mouse')
 endif
 "pluginを使用可能にする
 filetype plugin indent on
+"挿入及び改行時にコメントを自動入力しない
+autocmd FileType * set formatoptions-=ro
 
 "----------------------------------------
 " 検索
@@ -102,7 +105,7 @@ filetype plugin indent on
 "ただし大文字小文字の両方が含まれている場合は大文字小文字を区別する
 set ignorecase
 set smartcase
-"検索時にファイルの最後まで行ったら最初に戻る
+"検索時にファイルの最後まで行ったら最初に戻らない
 set nowrapscan
 "インクリメンタルサーチ
 set incsearch
@@ -132,6 +135,8 @@ if version >= 703
   "相対行番号表示(7.3)
   "set relativenumber
 endif
+"ルーラー表示する
+set ruler
 "括弧の対応表示時間
 set showmatch matchtime=1
 "タブを設定
@@ -152,6 +157,8 @@ set display=lastline
 "Tab、行末の半角スペースを明示的に表示する
 set list
 set listchars=tab:^\ ,trail:~
+"カーソル行を強調表示
+set cursorline
 
 " ハイライトを有効にする
 if &t_Co > 2 || has('gui_running')
@@ -229,8 +236,17 @@ function! MyPatch()
 endfunction
 
 "----------------------------------------
+" 共通
+"----------------------------------------
+"<Ctrl-J>に<Esc>を割り当て
+noremap <C-J> <Esc>
+cnoremap <C-J> <Esc>
+
+"----------------------------------------
 " ノーマルモード
 "----------------------------------------
+"<Ctrl-J>に<Esc>を割り当て
+nnoremap <C-J> <Esc>
 "ヘルプ検索
 nnoremap <F1> K
 "現在開いているvimスクリプトファイルを実行
@@ -254,14 +270,20 @@ endif
 "----------------------------------------
 " 挿入モード
 "----------------------------------------
+"<Ctrl-J>に<Esc>を割り当て
+inoremap <C-J> <Esc>
 
 "----------------------------------------
 " ビジュアルモード
 "----------------------------------------
+"<Ctrl-J>に<Esc>を割り当て
+vnoremap <C-J> <Esc>
 
 "----------------------------------------
 " コマンドモード
 "----------------------------------------
+"<Ctrl-J>に<Esc>を割り当て
+cnoremap <C-J> <Esc>
 
 "----------------------------------------
 " Vimスクリプト

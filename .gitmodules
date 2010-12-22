@@ -19,3 +19,6 @@
 [submodule "vimfiles/bundle/quickrun"]
 	path = vimfiles/bundle/quickrun
 	url = https://github.com/ujihisa/quickrun.git
+[submodule "vimfiles/bundle/skk.vim"]
+	path = vimfiles/bundle/skk.vim
+	url = https://github.com/tyru/skk.vim.git
