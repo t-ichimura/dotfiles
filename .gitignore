@@ -2,6 +2,7 @@
 /vim73
 /_sample_gvimrc
 /_sample_vimrc
+/ctags.exe
 /diff.exe
 /gvim.exe
 /gvimext.dll
@@ -17,4 +18,3 @@
 /vimtutor.bat
 /xxd.exe
 /vimfiles/pluginjp
-/ctags.exe
