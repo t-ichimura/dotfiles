@@ -174,7 +174,7 @@ endif
 "iconvが使用可能の場合、カーソル上の文字コードをエンコードに応じた表示にするFencB()を使用
 """"""""""""""""""""""""""""""
 if has('iconv')
-  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=[0x%{FencB()}]\ (%v,%l)/%L%8P\ 
+  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=%{PrintValueDebug()}[0x%{FencB()}]\ (%v,%l)/%L%8P\ 
 else
   set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=\ (%v,%l)/%L%8P\ 
 endif
@@ -184,6 +184,26 @@ function! FencB()
   let c = matchstr(getline('.'), '.', col('.') - 1)
   let c = iconv(c, &enc, &fenc)
   return s:Byte2hex(s:Str2byte(c))
+endfunction
+
+let g:debugmode = 0
+function! StartDebugMode()
+  let g:debugmode = 1
+endfunction
+function! EndDebugMode()
+  let g:debugmode = 0
+endfunction
+
+"PrintValueDebug() : ステータスラインに値を表示
+function! PrintValueDebug()
+  let x = ""
+  if g:debugmode == 1
+    let x = x . "IME=" . &iminsert
+    let x = x . "," . "MODE=" . mode()
+
+    let x = "[" . x . "]"
+  endif
+  return x
 endfunction
 
 function! s:Str2byte(str)
@@ -260,6 +280,13 @@ if has('folding')
   nnoremap <expr> l foldlevel(line('.')) ? "\<Right>zo" : "\<Right>"
 endif
 
+"カーソル位置の単語を単語単位の検索文字列に設定
+nnoremap <silent> *  :<C-u>call MySetSearch('""yiw', 'word')<CR>:let &hlsearch=&hlsearch<CR>
+"カーソル位置の単語を非単語単位の検索文字列に設定
+nnoremap <silent> g* :<C-u>call MySetSearch('""yiw')<CR>:let &hlsearch=&hlsearch<CR>
+"カーソル位置から単語の末尾までを検索文字列に設定
+nnoremap <silent> #  :<C-u>call MySetSearch('""ye')<CR>:let &hlsearch=&hlsearch<CR>
+
 "----------------------------------------
 " 挿入モード
 "----------------------------------------
@@ -272,13 +299,44 @@ inoremap <C-J> <Esc>
 "<Ctrl-J>に<Esc>を割り当て
 vnoremap <C-J> <Esc>
 
+"文字列選択中なら選択文字列を検索レジスタに設定。
+vnoremap <silent> * :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
+vnoremap <silent> # :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
+
 "----------------------------------------
 " コマンドモード
 "----------------------------------------
+"検索パターンで / or ? の入力時に\を付与する 
+cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
+cnoremap <expr> ?  getcmdtype() == '?' ? '\?' : '?'
 
 "----------------------------------------
 " Vimスクリプト
 "----------------------------------------
+""""""""""""""""""""""""""""""
+"検索ワードをセットする。
+"何か追加パラメータが設定されていたら、単語単位検索に。
+""""""""""""""""""""""""""""""
+function! MySetSearch(cmd, ...)
+  let saved_reg = @"
+  if a:cmd != ''
+    silent exec 'normal! '.a:cmd
+  endif
+  let pattern = escape(@", '\\/.*$^~[]')
+  let pattern = substitute(pattern, '\n$', '', '')
+  if a:0 > 0
+    let pattern = '\<'.pattern.'\>'
+  endif
+  let @/ = pattern
+  let @" = saved_reg
+endfunction 
+
+""""""""""""""""""""""""""""""
+"<Esc>押したときの処理
+""""""""""""""""""""""""""""""
+function! PushEscapeKey()
+  set nohlsearch
+endfunction
 """"""""""""""""""""""""""""""
 "ノーマルモードではIME使用不可にする
 """"""""""""""""""""""""""""""
@@ -286,10 +344,6 @@ augroup ImeMode
     autocmd!
     autocmd InsertEnter,CmdwinEnter * set noimdisable
     autocmd InsertLeave,CmdwinLeave * set imdisable
-augroup END
-augroup imestatus
-  autocmd!
-  autocmd CursorMovedI * echo &iminsert
 augroup END
 
 """"""""""""""""""""""""""""""
