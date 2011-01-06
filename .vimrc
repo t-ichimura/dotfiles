@@ -258,8 +258,8 @@ endfunction
 "----------------------------------------
 " ノーマルモード
 "----------------------------------------
-"<Ctrl-J>に<Esc>を割り当て
-nnoremap <C-J> <Esc>
+"<ESC>2回で、検索ハイライトをクリア
+nnoremap <ESC><ESC> :nohlsearch<CR><ESC>
 "ヘルプ検索
 nnoremap <F1> K
 "現在開いているvimスクリプトファイルを実行
@@ -290,15 +290,15 @@ nnoremap <silent> #  :<C-u>call MySetSearch('""ye')<CR>:let &hlsearch=&hlsearch<
 "----------------------------------------
 " 挿入モード
 "----------------------------------------
-"<Ctrl-J>に<Esc>を割り当て
-inoremap <C-J> <Esc>
+"方向キーの割り当て
+inoremap <C-H> <Left>
+inoremap <C-J> <Down>
+inoremap <C-K> <Up>
+inoremap <C-L> <Right>
 
 "----------------------------------------
 " ビジュアルモード
 "----------------------------------------
-"<Ctrl-J>に<Esc>を割り当て
-vnoremap <C-J> <Esc>
-
 "文字列選択中なら選択文字列を検索レジスタに設定。
 vnoremap <silent> * :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
 vnoremap <silent> # :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
@@ -335,8 +335,9 @@ endfunction
 "<Esc>押したときの処理
 """"""""""""""""""""""""""""""
 function! PushEscapeKey()
-  set nohlsearch
+  exec ":nohlsearch<CR><ESC>"
 endfunction
+
 """"""""""""""""""""""""""""""
 "ノーマルモードではIME使用不可にする
 """"""""""""""""""""""""""""""
