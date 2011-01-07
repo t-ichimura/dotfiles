@@ -1,8 +1,8 @@
 "=============================================================================
-"    Description: .vimrcサンプル設定
-"         Author: anonymous
-"  Last Modified: 0000-00-00 07:03
-"        Version: 0.00
+"    Description: .vimrc設定
+"         Author: Takashi Ichimura
+"  Last Modified: 2011-01-07
+"        Version: 1.01
 "=============================================================================
 set nocompatible
 scriptencoding cp932
@@ -68,6 +68,8 @@ set noswapfile
 "set viminfo=
 "クリップボードを共有
 set clipboard-=unnamed
+" 加算・減算処理時にアルファベットを対象にする
+set nrformats+=alpha
 "8進数を無効にする。<C-a>,<C-x>に影響する
 set nrformats-=octal
 "キーコードやマッピングされたキー列が完了するのを待つ時間(ミリ秒)
@@ -258,8 +260,6 @@ endfunction
 "----------------------------------------
 " ノーマルモード
 "----------------------------------------
-"<ESC>2回で、検索ハイライトをクリア
-nnoremap <ESC><ESC> :nohlsearch<CR><ESC>
 "ヘルプ検索
 nnoremap <F1> K
 "現在開いているvimスクリプトファイルを実行
@@ -275,6 +275,42 @@ nnoremap h <Left>
 nnoremap j gj
 nnoremap k gk
 nnoremap l <Right>
+"バッファ移動
+nnoremap <C-Tab>   :bnext<CR>
+nnoremap <C-S-Tab> :bprevious<CR>
+" タブページ移動
+nnoremap <C-PageUp>   :tabprevious<CR>
+nnoremap <C-PageDown> :tabnext<CR>
+" 検索後のハイライトを消す
+nnoremap <silent> <Esc> <Esc>:nohlsearch<CR>
+" 検索語を画面の真ん中へ表示
+nnoremap n nzz
+nnoremap N Nzz
+"nnoremap * *zz
+"nnoremap # #zz
+"nnoremap g* g*zz
+"nnoremap g# gnzz
+"ウィンドウ分割(方向・サイズ指定可能)
+nmap <Space>sj <SID>(split-to-j)
+nmap <Space>sk <SID>(split-to-k)
+nmap <Space>sh <SID>(split-to-h)
+nmap <Space>sl <SID>(split-to-l)
+nnoremap <SID>(split-to-j) :<C-u>execute 'belowright' (v:count == 0 ? '' : v:count) 'split'<CR>
+nnoremap <SID>(split-to-k) :<C-u>execute 'aboveleft'  (v:count == 0 ? '' : v:count) 'split'<CR>
+nnoremap <SID>(split-to-h) :<C-u>execute 'topleft'    (v:count == 0 ? '' : v:count) 'vsplit'<CR>
+nnoremap <SID>(split-to-l) :<C-u>execute 'botright'   (v:count == 0 ? '' : v:count) 'vsplit'<CR>
+" 検索後のヒットワードをquickfixへ表示
+nmap <unique> g/ :exec ':vimgrep /' . getreg('/') . '/j %\|cwin'<CR>
+" 移動でカーソルを中央に表示(EOF移動時は最下行表示)
+nnoremap <silent> G :<C-u>call CursorPositioningWhenMoving()<CR>
+function! CursorPositioningWhenMoving()
+  if v:count > 0
+    call feedkeys(v:count . "\<C-End>zz")
+  else
+    call feedkeys("\<C-End>z-")
+  endif
+endfunction
+
 "l を <Right>に置き換えても、折りたたみを l で開くことができるようにする
 if has('folding')
   nnoremap <expr> l foldlevel(line('.')) ? "\<Right>zo" : "\<Right>"
@@ -302,6 +338,8 @@ inoremap <C-L> <Right>
 "文字列選択中なら選択文字列を検索レジスタに設定。
 vnoremap <silent> * :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
 vnoremap <silent> # :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
+" Visualモード時の行末移動で改行コードを含まない
+vnoremap $ g_
 
 "----------------------------------------
 " コマンドモード
@@ -309,6 +347,20 @@ vnoremap <silent> # :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch
 "検索パターンで / or ? の入力時に\を付与する 
 cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
 cnoremap <expr> ?  getcmdtype() == '?' ? '\?' : '?'
+
+"----------------------------------------
+" オートコマンド
+"----------------------------------------
+" 挿入モード時にオートインデントを設定
+augroup AutoIndentOff
+  autocmd!
+  autocmd InsertEnter  *     execute 'set autoindent'
+augroup END
+" 挿入モード終了時にオートインデントを解除
+augroup AutoIndentOff
+  autocmd!
+  autocmd InsertLeave  *     execute 'set noautoindent'
+augroup END
 
 "----------------------------------------
 " Vimスクリプト
@@ -337,15 +389,6 @@ endfunction
 function! PushEscapeKey()
   exec ":nohlsearch<CR><ESC>"
 endfunction
-
-""""""""""""""""""""""""""""""
-"ノーマルモードではIME使用不可にする
-""""""""""""""""""""""""""""""
-augroup ImeMode
-    autocmd!
-    autocmd InsertEnter,CmdwinEnter * set noimdisable
-    autocmd InsertLeave,CmdwinLeave * set imdisable
-augroup END
 
 """"""""""""""""""""""""""""""
 "ファイルを開いたら前回のカーソル位置へ移動

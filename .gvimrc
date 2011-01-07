@@ -1,8 +1,8 @@
 "=============================================================================
-"    Description: .gvimrcサンプル設定
-"         Author: 
-"  Last Modified: 0000-00-00 00:00
-"        Version: 0.00
+"    Description: .gvimrc設定
+"         Author: Takashi Ichimura
+"  Last Modified: 2011-01-07 00:00
+"        Version: 1.01
 "=============================================================================
 scriptencoding cp932
 "----------------------------------------
@@ -25,6 +25,11 @@ endif
 if has('multi_byte_ime')
   highlight Cursor guifg=NONE guibg=Green
   highlight CursorIM guifg=NONE guibg=Purple
+  " 挿入モード終了時にIMEをOFF
+  augroup IMEInsertOff
+    autocmd!
+    autocmd InsertLeave  *     execute 'set iminsert=0'
+  augroup END
 endif
 
 "----------------------------------------
