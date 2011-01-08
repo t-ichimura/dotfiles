@@ -161,6 +161,8 @@ set list
 set listchars=tab:^\ ,trail:~
 " カーソル行を強調表示
 set cursorline
+" 改行コードはUNIXに設定
+set fileformat=unix
 
 " ハイライトを有効にする
 if &t_Co > 2 || has('gui_running')
@@ -257,6 +259,10 @@ function! MyPatch()
    :call system($VIM."\\'.'patch -o " . v:fname_out . " " . v:fname_in . " < " . v:fname_diff)
 endfunction
 
+"----------------------------------------
+" キーマップ
+"----------------------------------------
+let mapleader=","
 "----------------------------------------
 " ノーマルモード
 "----------------------------------------
@@ -468,21 +474,34 @@ endif
 "----------------------------------------
 " 各種プラグイン設定
 "----------------------------------------
-" pathogen
+" - pathogen ----------------------------
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-" neocomplcache
+" - neocomplcache -----------------------
 let g:neocomplcache_enable_at_startup = 1
 
-" netrw
+" - netrw -------------------------------
 let g:netrw_home = $HOME
 
-" NERDTree
+" - NERDTree ----------------------------
 " <F3>でNERDTree起動
-nnoremap <silent> <F3> :NERDTreeToggle %<CR>
+nnoremap <silent> <F3> :<C-u>NERDTreeToggle<CR>
 " 隠しファイルも表示
 let NERDTreeShowHidden=1
+
+" - Unite -------------------------------
+nmap <silent> <Leader>uf :<C-u>UniteWithBufferDir file<CR>
+nmap <silent> <Leader>ufm :<C-u>Unite file_mru<CR>
+nmap <silent> <Leader>ufr :<C-u>Unite file_rec<CR>
+nmap <silent> <Leader>ubm :<C-u>Unite bookmark<CR>
+nmap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+nmap <silent> <Leader>ubt :<C-u>Unite buffer_tab<CR>
+nmap <silent> <Leader>ud :<C-u>Unite directory_mru<CR>
+nmap <silent> <Leader>ut :<C-u>Unite tab<CR>
+nmap <silent> <Leader>us :<C-u>Unite source<CR>
+nmap <silent> <Leader>ur :<C-u>Unite register<CR>
+nmap <silent> <Leader>uw :<C-u>Unite window<CR>
 
 "----------------------------------------
 " 一時設定
