@@ -6,9 +6,9 @@
 "=============================================================================
 scriptencoding cp932
 "----------------------------------------
-"システム設定
+" システム設定
 "----------------------------------------
-"エラー時の音とビジュアルベルの抑制。
+" エラー時の音とビジュアルベルの抑制。
 set noerrorbells
 set novisualbell
 set visualbell t_vb=
@@ -21,7 +21,7 @@ if has('multi_byte_ime') || has('xim')
   endif
 endif
 
-"IMEの状態をカラー表示
+" IMEの状態をカラー表示
 if has('multi_byte_ime')
   highlight Cursor guifg=NONE guibg=Green
   highlight CursorIM guifg=NONE guibg=Purple
@@ -35,16 +35,16 @@ endif
 "----------------------------------------
 " 表示設定
 "----------------------------------------
-"ツールバーを非表示
+" ツールバーを非表示
 "set guioptions-=T
-"コマンドラインの高さ
+" コマンドラインの高さ
 set cmdheight=2
 
-"カラー設定:
+" カラー設定:
 colorscheme mycolor
 
-"フォント設定
-"フォントは英語名で指定すると問題が起きにくくなります
+" フォント設定
+" フォントは英語名で指定すると問題が起きにくくなります
 if has('xfontset')
 "  set guifontset=a14,r14,k14
 elseif has('unix')
@@ -56,7 +56,7 @@ elseif has('win32') || has('win64')
   set guifontwide=MS_Gothic:h10:cSHIFTJIS
 endif
 
-"印刷用フォント
+" 印刷用フォント
 if has('printer')
   if has('win32') || has('win64')
 "    set printfont=MS_Mincho:h12:cSHIFTJIS
@@ -65,7 +65,7 @@ if has('printer')
 endif
 
 """"""""""""""""""""""""""""""
-"Window位置の保存と復帰
+" Window位置の保存と復帰
 """"""""""""""""""""""""""""""
 if has('unix')
   let s:infofile = '~/.vim/.vimpos'
@@ -102,7 +102,7 @@ endif
 unlet s:infofile
 
 "----------------------------------------
-"メニューアイテム作成
+" メニューアイテム作成
 "----------------------------------------
 silent! aunmenu &File.Save
 silent! aunmenu &File.保存(&S)
