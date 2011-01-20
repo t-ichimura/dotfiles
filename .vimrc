@@ -486,9 +486,11 @@ let g:netrw_home = $HOME
 
 " - NERDTree ----------------------------
 " <F3>でNERDTree起動
-nnoremap <silent> <F3> :<C-u>NERDTreeToggle<CR>
+nnoremap <silent> <F3> :<C-u>NERDTree %:p:h<CR>
 " 隠しファイルも表示
 let NERDTreeShowHidden=1
+" ファイルを開いたら、NERDTreeのウィンドウを閉じる
+let NERDTreeQuitOnOpen=1
 
 " - Unite -------------------------------
 nmap <silent> <Leader>uf :<C-u>UniteWithBufferDir file<CR>
@@ -502,6 +504,16 @@ nmap <silent> <Leader>ut :<C-u>Unite tab<CR>
 nmap <silent> <Leader>us :<C-u>Unite source<CR>
 nmap <silent> <Leader>ur :<C-u>Unite register<CR>
 nmap <silent> <Leader>uw :<C-u>Unite window<CR>
+
+" unite.vim上でのキーマッピング
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()
+  " 単語単位からパス単位で削除するように変更
+  imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+  " ESCキーを2回押すと終了する
+  nmap <silent><buffer> <ESC><ESC> :<C-u>q<CR>
+  imap <silent><buffer> <ESC><ESC> <ESC>:<C-u>q<CR>
+endfunction
 
 "----------------------------------------
 " 一時設定
