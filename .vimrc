@@ -329,6 +329,10 @@ nnoremap <silent> g* :<C-u>call MySetSearch('""yiw')<CR>:let &hlsearch=&hlsearch
 " カーソル位置から単語の末尾までを検索文字列に設定
 nnoremap <silent> #  :<C-u>call MySetSearch('""ye')<CR>:let &hlsearch=&hlsearch<CR>
 
+" カーソル位置の単語とヤンクした文字列を置換する 
+nnoremap <silent> ciy ciw<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
+nnoremap <silent> cy   ce<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
+
 "----------------------------------------
 " 挿入モード
 "----------------------------------------
@@ -388,13 +392,6 @@ function! MySetSearch(cmd, ...)
   let @/ = pattern
   let @" = saved_reg
 endfunction 
-
-""""""""""""""""""""""""""""""
-" <Esc>押したときの処理
-""""""""""""""""""""""""""""""
-function! PushEscapeKey()
-  exec ":nohlsearch<CR><ESC>"
-endfunction
 
 """"""""""""""""""""""""""""""
 " ファイルを開いたら前回のカーソル位置へ移動
