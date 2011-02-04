@@ -270,8 +270,6 @@ let mapleader=","
 "----------------------------------------
 " ヘルプ検索
 nnoremap <F1> K
-" 現在開いているvimスクリプトファイルを実行
-nnoremap <F8> :source %<CR>
 " 強制全保存終了を無効化
 nnoremap ZZ <Nop>
 " カーソルをj k では表示行で移動する。物理行移動は<C-n>,<C-p>
@@ -334,6 +332,12 @@ nnoremap <silent> #  :<C-u>call MySetSearch('""ye')<CR>:let &hlsearch=&hlsearch<
 " カーソル位置の単語とヤンクした文字列を置換する 
 nnoremap <silent> ciy ciw<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> cy   ce<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
+
+" 現在の開いているバッファのディレクトリへ移動
+nnoremap <silent> <Leader>cd :<C-u>execute ":silent! lcd " . escape(expand("%:p:h"), ' ')<CR>
+
+" .vimrcを編集する
+nnoremap <silent> <F10> :e $VIM/.vimrc<CR>
 
 "----------------------------------------
 " 挿入モード
@@ -462,13 +466,13 @@ endif
 """"""""""""""""""""""""""""""
 " grep,tagsのためカレントディレクトリをファイルと同じディレクトリに移動する
 """"""""""""""""""""""""""""""
-if exists('+autochdir')
-  "autochdirがある場合カレントディレクトリを移動
-  set autochdir
-else
-  "autochdirが存在しないが、カレントディレクトリを移動したい場合
-  au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
-endif
+"if exists('+autochdir')
+  ""autochdirがある場合カレントディレクトリを移動
+  "set autochdir
+"else
+  ""autochdirが存在しないが、カレントディレクトリを移動したい場合
+  "au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
+"endif
 
 "----------------------------------------
 " 各種プラグイン設定
@@ -485,33 +489,48 @@ let g:netrw_home = $HOME
 
 " - NERDTree ----------------------------
 " <F3>でNERDTree起動
+" 備考：トグルでカレントバッファのディレクトリが開けないため、下記の設定で対処
 nnoremap <silent> <F3> :<C-u>NERDTree %:p:h<CR>
+" NERDTree上でのキーマッピング
+autocmd FileType nerdtree call s:nerdtree_my_settings()
+function! s:nerdtree_my_settings()
+  " F3,ESCキーを押すと終了する
+  nmap <silent><buffer> <F3> :<C-u>q<CR>
+  imap <silent><buffer> <F3> <ESC>:<C-u>q<CR>
+  nmap <silent><buffer> <ESC> :<C-u>q<CR>
+  imap <silent><buffer> <ESC> <ESC>:<C-u>q<CR>
+endfunction
 " 隠しファイルも表示
 let NERDTreeShowHidden=1
 " ファイルを開いたら、NERDTreeのウィンドウを閉じる
 let NERDTreeQuitOnOpen=1
 
 " - Unite -------------------------------
-nmap <silent> <Leader>uf :<C-u>UniteWithBufferDir file<CR>
-nmap <silent> <Leader>ufm :<C-u>Unite file_mru<CR>
-nmap <silent> <Leader>ufr :<C-u>Unite file_rec<CR>
-nmap <silent> <Leader>ubm :<C-u>Unite bookmark<CR>
-nmap <silent> <Leader>ub :<C-u>Unite buffer<CR>
-nmap <silent> <Leader>ubt :<C-u>Unite buffer_tab<CR>
-nmap <silent> <Leader>ud :<C-u>Unite directory_mru<CR>
-nmap <silent> <Leader>ut :<C-u>Unite tab<CR>
-nmap <silent> <Leader>us :<C-u>Unite source<CR>
-nmap <silent> <Leader>ur :<C-u>Unite register<CR>
-nmap <silent> <Leader>uw :<C-u>Unite window<CR>
+nnoremap <silent> <Leader>uf :<C-u>UniteWithBufferDir file<CR>
+nnoremap <silent> <Leader>ufm :<C-u>Unite file_mru<CR>
+nnoremap <silent> <Leader>ufr :<C-u>Unite file_rec<CR>
+nnoremap <silent> <Leader>ubm :<C-u>Unite bookmark<CR>
+nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+nnoremap <silent> <F2> :<C-u>Unite buffer<CR>
+nnoremap <silent> <Leader>ubt :<C-u>Unite buffer_tab<CR>
+nnoremap <silent> <Leader>ud :<C-u>Unite directory_mru<CR>
+"nnoremap <silent> <Leader>ut :<C-u>Unite tab<CR>
+nnoremap <silent> <Leader>us :<C-u>Unite source<CR>
+nnoremap <silent> <Leader>ur :<C-u>Unite register<CR>
+nnoremap <silent> <Leader>uw :<C-u>Unite window<CR>
+nnoremap <silent> <Leader>uo :<C-u>Unite outline<CR>
+"nnoremap <silent> <Leader>utg :<C-u>Unite -immediately -no-start-insert tags:<C-r>=expand('<cword>')<CR><CR>
+"nnoremap <silent> <Leader>utf :<C-u>Unite tags/file<CR>
+
 
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-  " ESCキーを2回押すと終了する
-  nmap <silent><buffer> <ESC><ESC> :<C-u>q<CR>
-  imap <silent><buffer> <ESC><ESC> <ESC>:<C-u>q<CR>
+  " ESCキーを押すと終了する
+  nmap <silent><buffer> <ESC> :<C-u>q<CR>
+  imap <silent><buffer> <ESC> <ESC>:<C-u>q<CR>
 endfunction
 
 "----------------------------------------

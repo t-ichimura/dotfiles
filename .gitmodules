@@ -19,9 +19,6 @@
 [submodule "vimfiles/bundle/vim-surround"]
 	path = vimfiles/bundle/vim-surround
 	url = https://github.com/tpope/vim-surround.git
-[submodule "vimfiles/bundle/QuickBuf"]
-	path = vimfiles/bundle/QuickBuf
-	url = https://github.com/vim-scripts/QuickBuf.git
 [submodule "vimfiles/bundle/quickrun"]
 	path = vimfiles/bundle/quickrun
 	url = https://github.com/ujihisa/quickrun.git
