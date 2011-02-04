@@ -40,3 +40,6 @@
 [submodule "vimfiles/bundle/unite-outline"]
 	path = vimfiles/bundle/unite-outline
 	url = https://github.com/h1mesuke/unite-outline.git
+[submodule "vimfiles/bundle/unite-tags"]
+	path = vimfiles/bundle/unite-tags
+	url = https://github.com/thinca/unite-tags.git
