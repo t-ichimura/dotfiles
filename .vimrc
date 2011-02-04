@@ -117,6 +117,8 @@ set hlsearch
 "set iskeyword=a-z,A-Z,48-57,_,.,-,>
 " vimgrep をデフォルトのgrepとする場合internal
 "set grepprg=internal
+" tagsファイルの検索位置
+set tags+=tags;
 
 "----------------------------------------
 " 表示設定
