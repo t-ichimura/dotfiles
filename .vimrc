@@ -466,13 +466,13 @@ endif
 """"""""""""""""""""""""""""""
 " grep,tagsのためカレントディレクトリをファイルと同じディレクトリに移動する
 """"""""""""""""""""""""""""""
-"if exists('+autochdir')
-  ""autochdirがある場合カレントディレクトリを移動
-  "set autochdir
-"else
-  ""autochdirが存在しないが、カレントディレクトリを移動したい場合
-  "au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
-"endif
+if exists('+autochdir')
+  "autochdirがある場合カレントディレクトリを移動
+  set autochdir
+else
+  "autochdirが存在しないが、カレントディレクトリを移動したい場合
+  au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
+endif
 
 "----------------------------------------
 " 各種プラグイン設定
@@ -519,8 +519,8 @@ nnoremap <silent> <Leader>us :<C-u>Unite source<CR>
 nnoremap <silent> <Leader>ur :<C-u>Unite register<CR>
 nnoremap <silent> <Leader>uw :<C-u>Unite window<CR>
 nnoremap <silent> <Leader>uo :<C-u>Unite outline<CR>
-"nnoremap <silent> <Leader>utg :<C-u>Unite -immediately -no-start-insert tags:<C-r>=expand('<cword>')<CR><CR>
-"nnoremap <silent> <Leader>utf :<C-u>Unite tags/file<CR>
+nnoremap <silent> <Leader>utg :<C-u>Unite -immediately -no-start-insert tags:<C-r>=expand('<cword>')<CR><CR>
+nnoremap <silent> <Leader>utf :<C-u>Unite tags/file<CR>
 
 
 " unite.vim上でのキーマッピング
