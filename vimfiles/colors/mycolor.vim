@@ -32,7 +32,7 @@ highlight PmenuSbar                       guibg=LightGrey
 highlight PmenuThumb                      guibg=Grey50    gui=NONE
 highlight CursorLine                      guibg=Grey10
 highlight CursorColumn                                    gui=underline
-"IME‚Ìó‘Ô‚ğƒJƒ‰[•\¦
+"IMEã®çŠ¶æ…‹ã‚’ã‚«ãƒ©ãƒ¼è¡¨ç¤º
 if has('multi_byte_ime')
   highlight Cursor     guifg=NONE         guibg=Green
   highlight CursorIM   guifg=NONE         guibg=Purple

@@ -1,14 +1,14 @@
 "=============================================================================
-"    Description: .gvimrcİ’è
+"    Description: .gvimrcè¨­å®š
 "         Author: Takashi Ichimura
 "  Last Modified: 2011-01-07 00:00
 "        Version: 1.01
 "=============================================================================
-scriptencoding cp932
+scriptencoding utf-8
 "----------------------------------------
-" ƒVƒXƒeƒ€İ’è
+" ã‚·ã‚¹ãƒ†ãƒ è¨­å®š
 "----------------------------------------
-" ƒGƒ‰[‚Ì‰¹‚ÆƒrƒWƒ…ƒAƒ‹ƒxƒ‹‚Ì—}§B
+" ã‚¨ãƒ©ãƒ¼æ™‚ã®éŸ³ã¨ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ãƒ™ãƒ«ã®æŠ‘åˆ¶ã€‚
 set noerrorbells
 set novisualbell
 set visualbell t_vb=
@@ -16,16 +16,16 @@ set visualbell t_vb=
 if has('multi_byte_ime') || has('xim')
   set iminsert=0 imsearch=0
   if has('xim') && has('GUI_GTK')
-    "XIM‚Ì“ü—ÍŠJnƒL[
+    "XIMã®å…¥åŠ›é–‹å§‹ã‚­ãƒ¼
     "set imactivatekey=C-space
   endif
 endif
 
-" IME‚Ìó‘Ô‚ğƒJƒ‰[•\¦
+" IMEã®çŠ¶æ…‹ã‚’ã‚«ãƒ©ãƒ¼è¡¨ç¤º
 if has('multi_byte_ime')
   highlight Cursor guifg=NONE guibg=Green
   highlight CursorIM guifg=NONE guibg=Purple
-  " ‘}“üƒ‚[ƒhI—¹‚ÉIME‚ğOFF
+  " æŒ¿å…¥ãƒ¢ãƒ¼ãƒ‰çµ‚äº†æ™‚ã«IMEã‚’OFF
   augroup IMEInsertOff
     autocmd!
     autocmd InsertLeave  *     execute 'set iminsert=0'
@@ -33,18 +33,18 @@ if has('multi_byte_ime')
 endif
 
 "----------------------------------------
-" •\¦İ’è
+" è¡¨ç¤ºè¨­å®š
 "----------------------------------------
-" ƒc[ƒ‹ƒo[‚ğ”ñ•\¦
+" ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã‚’éè¡¨ç¤º
 "set guioptions-=T
-" ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ì‚‚³
+" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®é«˜ã•
 set cmdheight=2
 
-" ƒJƒ‰[İ’è:
+" ã‚«ãƒ©ãƒ¼è¨­å®š:
 colorscheme mycolor
 
-" ƒtƒHƒ“ƒgİ’è
-" ƒtƒHƒ“ƒg‚Í‰pŒê–¼‚Åw’è‚·‚é‚Æ–â‘è‚ª‹N‚«‚É‚­‚­‚È‚è‚Ü‚·
+" ãƒ•ã‚©ãƒ³ãƒˆè¨­å®š
+" ãƒ•ã‚©ãƒ³ãƒˆã¯è‹±èªåã§æŒ‡å®šã™ã‚‹ã¨å•é¡ŒãŒèµ·ãã«ãããªã‚Šã¾ã™
 if has('xfontset')
 "  set guifontset=a14,r14,k14
 elseif has('unix')
@@ -56,7 +56,7 @@ elseif has('win32') || has('win64')
   set guifontwide=MS_Gothic:h10:cSHIFTJIS
 endif
 
-" ˆóü—pƒtƒHƒ“ƒg
+" å°åˆ·ç”¨ãƒ•ã‚©ãƒ³ãƒˆ
 if has('printer')
   if has('win32') || has('win64')
 "    set printfont=MS_Mincho:h12:cSHIFTJIS
@@ -65,7 +65,7 @@ if has('printer')
 endif
 
 """"""""""""""""""""""""""""""
-" WindowˆÊ’u‚Ì•Û‘¶‚Æ•œ‹A
+" Windowä½ç½®ã®ä¿å­˜ã¨å¾©å¸°
 """"""""""""""""""""""""""""""
 if has('unix')
   let s:infofile = '~/.vim/.vimpos'
@@ -102,18 +102,18 @@ endif
 unlet s:infofile
 
 "----------------------------------------
-" ƒƒjƒ…[ƒAƒCƒeƒ€ì¬
+" ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚¢ã‚¤ãƒ†ãƒ ä½œæˆ
 "----------------------------------------
 silent! aunmenu &File.Save
-silent! aunmenu &File.•Û‘¶(&S)
-silent! aunmenu &File.·•ª•\¦(&D)\.\.\.
+silent! aunmenu &File.ä¿å­˜(&S)
+silent! aunmenu &File.å·®åˆ†è¡¨ç¤º(&D)\.\.\.
 
-let message_revert="Ä“Ç‚µ‚Ü‚·‚©?"
-amenu <silent> 10.330 &File.Ä“Ç(&U)<Tab>:e!  :if confirm(message_revert, "&Yes\n&No")==1<Bar> e! <Bar> endif<CR>
-amenu <silent> 10.331 &File.ƒoƒbƒtƒ@íœ(&K)<Tab>:bd  :confirm bd<CR>
-amenu <silent> 10.340 &File.•Û‘¶(&W)<Tab>:w  :if expand('%') == ''<Bar>browse confirm w<Bar>else<Bar>confirm w<Bar>endif<CR>
-amenu <silent> 10.341 &File.XV•Û‘¶(&S)<Tab>:update  :if expand('%') == ''<Bar>browse confirm w<Bar>else<Bar>confirm update<Bar>endif<CR>
-amenu <silent> 10.400 &File.Œ»ƒoƒbƒtƒ@·•ª•\¦(&D)<Tab>:DiffOrig  :DiffOrig<CR>
-amenu <silent> 10.401 &File.— ƒoƒbƒtƒ@‚Æ·•ª•\¦(&D)<Tab>:Diff\ #  :Diff #<CR>
-amenu <silent> 10.402 &File.·•ª•\¦(&D)<Tab>:Diff  :browse vertical diffsplit<CR>
+let message_revert="å†èª­è¾¼ã—ã¾ã™ã‹?"
+amenu <silent> 10.330 &File.å†èª­è¾¼(&U)<Tab>:e!  :if confirm(message_revert, "&Yes\n&No")==1<Bar> e! <Bar> endif<CR>
+amenu <silent> 10.331 &File.ãƒãƒƒãƒ•ã‚¡å‰Šé™¤(&K)<Tab>:bd  :confirm bd<CR>
+amenu <silent> 10.340 &File.ä¿å­˜(&W)<Tab>:w  :if expand('%') == ''<Bar>browse confirm w<Bar>else<Bar>confirm w<Bar>endif<CR>
+amenu <silent> 10.341 &File.æ›´æ–°æ™‚ä¿å­˜(&S)<Tab>:update  :if expand('%') == ''<Bar>browse confirm w<Bar>else<Bar>confirm update<Bar>endif<CR>
+amenu <silent> 10.400 &File.ç¾ãƒãƒƒãƒ•ã‚¡å·®åˆ†è¡¨ç¤º(&D)<Tab>:DiffOrig  :DiffOrig<CR>
+amenu <silent> 10.401 &File.è£ãƒãƒƒãƒ•ã‚¡ã¨å·®åˆ†è¡¨ç¤º(&D)<Tab>:Diff\ #  :Diff #<CR>
+amenu <silent> 10.402 &File.å·®åˆ†è¡¨ç¤º(&D)<Tab>:Diff  :browse vertical diffsplit<CR>
 

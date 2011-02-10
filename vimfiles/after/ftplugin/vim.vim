@@ -3,8 +3,8 @@
 " Maintainer:	Takashi Ichimura <t-ichimura@gadget-frontier.net>
 " Last Change:	2010 Dec 22
 
-"ƒ^ƒu‚ğ‹ó”’‚É•ÏŠ·
+"ã‚¿ãƒ–ã‚’ç©ºç™½ã«å¤‰æ›
 set expandtab
-"<TAB>‚Ì•\¦•‚ÆƒCƒ“ƒfƒ“ƒg‹y‚Ñ<TAB>,<BS>‚Å‚ÌˆÚ“®•‚ğİ’è
+"<TAB>ã®è¡¨ç¤ºå¹…ã¨ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆåŠã³<TAB>,<BS>ã§ã®ç§»å‹•å¹…ã‚’è¨­å®š
 set ts=2 sw=2 sts=2
 
