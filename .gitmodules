@@ -37,9 +37,9 @@
 [submodule "vimfiles/bundle/unite-outline"]
 	path = vimfiles/bundle/unite-outline
 	url = https://github.com/h1mesuke/unite-outline.git
-[submodule "vimfiles/bundle/unite-tags"]
-	path = vimfiles/bundle/unite-tags
-	url = https://github.com/thinca/unite-tags.git
 [submodule "vimfiles/bundle/flex-4"]
 	path = vimfiles/bundle/flex-4
 	url = https://github.com/vim-scripts/Flex-4.git
+[submodule "vimfiles/bundle/csv.vim"]
+	path = vimfiles/bundle/csv.vim
+	url = https://github.com/chrisbra/csv.vim.git
