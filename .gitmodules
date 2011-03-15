@@ -40,6 +40,3 @@
 [submodule "vimfiles/bundle/flex-4"]
 	path = vimfiles/bundle/flex-4
 	url = https://github.com/vim-scripts/Flex-4.git
-[submodule "vimfiles/bundle/csv.vim"]
-	path = vimfiles/bundle/csv.vim
-	url = https://github.com/chrisbra/csv.vim.git

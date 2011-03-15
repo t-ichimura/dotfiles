@@ -507,6 +507,7 @@ let NERDTreeQuitOnOpen=1
 
 " - Unite -------------------------------
 nnoremap <silent> <Leader>uf :<C-u>UniteWithBufferDir file<CR>
+nnoremap <silent> <Leader>ufi :<C-u>Unite file_include<CR>
 nnoremap <silent> <Leader>ufm :<C-u>Unite file_mru<CR>
 nnoremap <silent> <Leader>ufr :<C-u>Unite file_rec<CR>
 nnoremap <silent> <Leader>ubm :<C-u>Unite bookmark<CR>
