@@ -265,6 +265,7 @@ endfunction
 " キーマップ
 "----------------------------------------
 let mapleader=","
+
 "----------------------------------------
 " ノーマルモード
 "----------------------------------------
@@ -477,9 +478,47 @@ endif
 "----------------------------------------
 " 各種プラグイン設定
 "----------------------------------------
-" - pathogen ----------------------------
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
+" - neobundle ---------------------------
+if has('vim_starting')
+  set runtimepath+=$MY_VIMRUNTIME/bundle/neobundle.vim/
+endif
+
+call neobundle#rc(expand('$MY_VIMRUNTIME/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" Recommended to install
+" After install, turn shell $MY_VIMRUNTIME/bundle/vimproc, (n,g)make -f your_machines_makefile
+NeoBundle 'Shougo/vimproc'
+
+" github repos
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'ujihisa/quickrun'
+NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-indent'
+NeoBundle 'vim-scripts/grep.vim'
+NeoBundle 'Sixeight/unite-grep'
+NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'vim-scripts/Flex-4'
+NeoBundle 'vim-jp/vimdoc-ja'
+
+" vim-scripts repos
+
+" Non github repos
+
+" Non git repos
+
+
+filetype plugin indent on " Required!
+
+" Installation check
+NeoBundleCheck
 
 " - neocomplcache -----------------------
 let g:neocomplcache_enable_at_startup = 1
