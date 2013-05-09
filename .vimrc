@@ -509,6 +509,7 @@ NeoBundle 'Sixeight/unite-grep'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'vim-scripts/Flex-4'
 NeoBundle 'vim-jp/vimdoc-ja'
+NeoBundle 'tpope/vim-fugitive'
 
 " vim-scripts repos
 
