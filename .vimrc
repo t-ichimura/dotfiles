@@ -479,6 +479,8 @@ endif
 " 各種プラグイン設定
 "----------------------------------------
 " - neobundle ---------------------------
+filetype off
+
 if has('vim_starting')
   set runtimepath+=$MY_VIMRUNTIME/bundle/neobundle.vim/
 endif
