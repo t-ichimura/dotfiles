@@ -1,8 +1,8 @@
 "=============================================================================
 "    Description: .vimrc設定
 "         Author: Takashi Ichimura
-"  Last Modified: 2011-01-07
-"        Version: 1.01
+"  Last Modified: 2013-05-09
+"        Version: 2.00
 "=============================================================================
 set nocompatible
 scriptencoding utf-8
@@ -10,9 +10,11 @@ scriptencoding utf-8
 " scriptencodingは、vimの内部エンコーディングと同じものを推奨します。
 " 改行コードは set fileformat=unix に設定するとunixでも使えます。
 
-"----------------------------------------
+"=============================================================================
 " ユーザーランタイムパス設定
-"----------------------------------------
+"=============================================================================
+" ランタイムパスの設定を初期化(再読込対策)
+set runtimepath&
 " Windows, unixでのruntimepathの違いを吸収するためのもの。
 " $MY_VIMRUNTIMEはユーザーランタイムディレクトリを示す。
 " :echo $MY_VIMRUNTIMEで実際のパスを確認できます。
@@ -29,9 +31,9 @@ endif
 " 例) vimfiles/qfixapp (Linuxでは~/.vim/qfixapp)にランタイムパスを通す場合
 "set runtimepath+=$MY_VIMRUNTIME/qfixapp
 
-"----------------------------------------
+"=============================================================================
 " 内部エンコーディング指定
-"----------------------------------------
+"=============================================================================
 " 内部エンコーディングのUTF-8化と文字コードの自動認識設定をencode.vimで行う。
 " オールインワンパッケージの場合 vimrcで設定されているので何もしない。
 " エンコーディング指定や文字コードの自動認識設定が適切に設定されている場合、
@@ -41,12 +43,16 @@ silent! source $MY_VIMRUNTIME/pluginjp/encode.vim
 " 変更後にもscriptencodingを指定しておくと問題が起きにくくなります。
 scriptencoding utf-8
 
-"----------------------------------------
+"=============================================================================
 " システム設定
-"----------------------------------------
+"=============================================================================
 " mswin.vimを読み込む
 "source $VIMRUNTIME/mswin.vim
 "behave mswin
+" 独自設定のautocmd用グループを設定(.vimrc再読み込み対策)
+augroup MySetting
+  autocmd!
+augroup END
 
 " ファイルの上書きの前にバックアップを作る/作らない
 " set writebackupを指定してもオプション 'backup' がオンでない限り、
@@ -67,8 +73,10 @@ set noswapfile
 " viminfoを作成しない
 "set viminfo=
 " クリップボードを共有
+set clipboard&
 set clipboard-=unnamed
 " 加算・減算処理時にアルファベットを対象にする
+set nrformats&
 set nrformats+=alpha
 " 8進数を無効にする。<C-a>,<C-x>に影響する
 set nrformats-=octal
@@ -79,6 +87,7 @@ set hidden
 " ヒストリの保存数
 set history=50
 " 日本語の行の連結時には空白を入力しない
+set formatoptions&
 set formatoptions+=mM
 " Visual blockモードでフリーカーソルを有効にする
 set virtualedit=block
@@ -98,14 +107,11 @@ endif
 " pluginを使用可能にする
 filetype plugin indent on
 " 挿入及び改行時にコメントを自動入力しない
-augroup MyKeyMapping
-  autocmd!
-  autocmd FileType * set formatoptions-=ro
-augroup END
+autocmd MySetting FileType * set formatoptions-=ro
 
-"----------------------------------------
+"=============================================================================
 " 検索
-"----------------------------------------
+"=============================================================================
 " 検索の時に大文字小文字を区別しない
 " ただし大文字小文字の両方が含まれている場合は大文字小文字を区別する
 set ignorecase
@@ -121,11 +127,12 @@ set hlsearch
 " vimgrep をデフォルトのgrepとする場合internal
 "set grepprg=internal
 " tagsファイルの検索位置
+set tags&
 set tags+=tags;
 
-"----------------------------------------
+"=============================================================================
 " 表示設定
-"----------------------------------------
+"=============================================================================
 " スプラッシュ(起動時のメッセージ)を表示しない
 "set shortmess+=I
 " エラー時の音とビジュアルベルの抑制(gvimは.gvimrcで設定)
@@ -151,6 +158,7 @@ set showmatch matchtime=1
 " 自動的にインデントする
 set autoindent
 " Cインデントの設定
+set cinoptions&
 set cinoptions+=:0
 " タイトルを表示
 set title
@@ -178,102 +186,26 @@ endif
 " gvimの色テーマは.gvimrcで指定する
 "colorscheme mycolor
 
-""""""""""""""""""""""""""""""
 " ステータスラインに文字コード等表示
-" iconvが使用可能の場合、カーソル上の文字コードをエンコードに応じた表示にするFencB()を使用
-""""""""""""""""""""""""""""""
+" ・iconvが使用可能の場合、カーソル上の文字コードをエンコードに応じた表示にするFencB()を使用
+" ・fugitiveで、gitのリポジトリがある場合、ブランチを表示
 if has('iconv')
-  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=%{PrintValueDebug()}[0x%{FencB()}]\ (%v,%l)/%L%8P\ 
+  set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=%{ViewDebugMode()}%{ViewFugitiveStatusLine()}[0x%{FencB()}]\ (%v,%l)/%L%8P\ 
 else
   set statusline=%<%f\ %m\ %r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%=\ (%v,%l)/%L%8P\ 
 endif
 
-" FencB() : カーソル上の文字コードをエンコードに応じた表示にする
-function! FencB()
-  let c = matchstr(getline('.'), '.', col('.') - 1)
-  let c = iconv(c, &enc, &fenc)
-  return s:Byte2hex(s:Str2byte(c))
-endfunction
-
-let g:debugmode = 0
-function! StartDebugMode()
-  let g:debugmode = 1
-endfunction
-function! EndDebugMode()
-  let g:debugmode = 0
-endfunction
-
-" PrintValueDebug() : ステータスラインに値を表示
-function! PrintValueDebug()
-  let x = ""
-  if g:debugmode == 1
-    let x = x . "IME=" . &iminsert
-    let x = x . "," . "MODE=" . mode()
-
-    let x = "[" . x . "]"
-  endif
-  return x
-endfunction
-
-function! s:Str2byte(str)
-  return map(range(len(a:str)), 'char2nr(a:str[v:val])')
-endfunction
-
-function! s:Byte2hex(bytes)
-  return join(map(copy(a:bytes), 'printf("%02X", v:val)'), '')
-endfunction
-
-"----------------------------------------
-" diff/patch
-"----------------------------------------
-" diffの設定
-if has('win32') || has('win64')
-  set diffexpr=MyDiff()
-  function! MyDiff()
-    let opt = '-a --binary '
-    if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-    let arg1 = v:fname_in
-    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-    let arg2 = v:fname_new
-    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-    let arg3 = v:fname_out
-    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-    let eq = ''
-    if $VIMRUNTIME =~ ' '
-      if &sh =~ '\<cmd'
-        let cmd = '""' . $VIMRUNTIME . '\diff"'
-        let eq = '"'
-      else
-        let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-      endif
-    else
-      let cmd = $VIMRUNTIME . '\diff'
-    endif
-    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-  endfunction
-endif
-
-" 現バッファの差分表示(変更箇所の表示)
-command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
-" ファイルまたはバッファ番号を指定して差分表示。#なら裏バッファと比較
-command! -nargs=? -complete=file Diff if '<args>'=='' | browse vertical diffsplit|else| vertical diffsplit <args>|endif
-" パッチコマンド
-set patchexpr=MyPatch()
-function! MyPatch()
-   :call system($VIM."\\'.'patch -o " . v:fname_out . " " . v:fname_in . " < " . v:fname_diff)
-endfunction
-
-"----------------------------------------
+"=============================================================================
 " キーマップ
-"----------------------------------------
+"=============================================================================
 let mapleader=","
 
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " ノーマルモード
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " ヘルプ検索
 nnoremap <F1> K
+nnoremap <Space>h :<C-u>vert bel h<Space>
 " 強制全保存終了を無効化
 nnoremap ZZ <Nop>
 " カーソルをj k では表示行で移動する。物理行移動は<C-n>,<C-p>
@@ -310,7 +242,8 @@ nnoremap <SID>(split-to-k) :<C-u>execute 'aboveleft'  (v:count == 0 ? '' : v:cou
 nnoremap <SID>(split-to-h) :<C-u>execute 'topleft'    (v:count == 0 ? '' : v:count) 'vsplit'<CR>
 nnoremap <SID>(split-to-l) :<C-u>execute 'botright'   (v:count == 0 ? '' : v:count) 'vsplit'<CR>
 " 検索後のヒットワードをquickfixへ表示
-nmap <unique> g/ :exec ':vimgrep /' . getreg('/') . '/j %\|cwin'<CR>
+"nmap <unique> g/ :exec ':vimgrep /' . getreg('/') . '/j %\|cwin'<CR>
+nmap g/ :exec ':vimgrep /' . getreg('/') . '/j %\|cwin'<CR>
 " 移動でカーソルを中央に表示(EOF移動時は最下行表示)
 nnoremap <silent> G :<C-u>call CursorPositioningWhenMoving()<CR>
 function! CursorPositioningWhenMoving()
@@ -340,37 +273,41 @@ nnoremap <silent> cy   ce<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
 " 現在の開いているバッファのディレクトリへ移動
 nnoremap <silent> <Leader>cd :<C-u>execute ":silent! lcd " . escape(expand("%:p:h"), ' ')<CR>
 
-" .vimrcを編集する
-nnoremap <silent> <F10> :e $VIM/.vimrc<CR>
+" .vimrc&.gvimrcを編集する
+nnoremap <silent> <Space>ev  :<C-u>edit $MYVIMRC<CR>
+nnoremap <silent> <Space>eg  :<C-u>edit $MYGVIMRC<CR>
+" .vimrc&.gvimrcを再設定する
+nnoremap <silent> <Space>rv :<C-u>source $MYVIMRC \| if has('gui_running') \| source $MYGVIMRC \| endif <CR>
+nnoremap <silent> <Space>rg :<C-u>source $MYGVIMRC<CR>
 
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " 挿入モード
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " 方向キーの割り当て
 inoremap <C-H> <Left>
 inoremap <C-J> <Down>
 inoremap <C-K> <Up>
 inoremap <C-L> <Right>
 
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " ビジュアルモード
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " 文字列選択中なら選択文字列を検索レジスタに設定。
 vnoremap <silent> * :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
 vnoremap <silent> # :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
 " Visualモード時の行末移動で改行コードを含まない
 vnoremap $ g_
 
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " コマンドモード
-"----------------------------------------
+"-----------------------------------------------------------------------------
 " 検索パターンで / or ? の入力時に\を付与する 
 cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
 cnoremap <expr> ?  getcmdtype() == '?' ? '\?' : '?'
 
-"----------------------------------------
-" オートコマンド
-"----------------------------------------
+"=============================================================================
+" オートコマンド・関数定義
+"=============================================================================
 " 挿入モード時にオートインデントを設定
 augroup AutoIndentOff
   autocmd!
@@ -382,13 +319,127 @@ augroup AutoIndentOff
   autocmd InsertLeave  *     execute 'set noautoindent'
 augroup END
 
-"----------------------------------------
-" Vimスクリプト
-"----------------------------------------
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
+" ファイルを開いたら前回のカーソル位置へ移動
+" $VIMRUNTIME/vimrc_example.vim
+"-----------------------------------------------------------------------------
+augroup vimrcEx
+  autocmd!
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line('$') |
+    \   exe "normal! g`\"" |
+    \ endif
+augroup END
+
+" - vimrc,gvimrc設定変更後に再読み込み ---------------------------------------
+if !has('gui_running') && !(has('win32') || has('win64'))
+    " .vimrcの再読込時にも色が変化するようにする
+    autocmd MySetting BufWritePost $MYVIMRC nested source $MYVIMRC
+else
+    " .vimrcの再読込時にも色が変化するようにする
+    autocmd MySetting BufWritePost $MYVIMRC source $MYVIMRC | 
+                \if has('gui_running') | source $MYGVIMRC  
+    autocmd MySetting BufWritePost $MYGVIMRC if has('gui_running') | source $MYGVIMRC
+endif
+
+" - diffの設定 ---------------------------------------------------------------
+if has('win32') || has('win64')
+  set diffexpr=MyDiff()
+  function! MyDiff()
+    let opt = '-a --binary '
+    if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+    let arg1 = v:fname_in
+    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+    let arg2 = v:fname_new
+    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+    let arg3 = v:fname_out
+    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+    let eq = ''
+"    if $VIMRUNTIME =~ ' '
+"      if &sh =~ '\<cmd'
+"        let cmd = '""' . $VIMRUNTIME . '\diff"'
+"        let eq = '"'
+"      else
+"        let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+"      endif
+"    else
+"      let cmd = $VIMRUNTIME . '\diff'
+"    endif
+    let cmd = $VIM . '\diff'
+    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+  endfunction
+endif
+
+" 現バッファの差分表示(変更箇所の表示)
+command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+" ファイルまたはバッファ番号を指定して差分表示。#なら裏バッファと比較
+command! -nargs=? -complete=file Diff if '<args>'=='' | browse vertical diffsplit|else| vertical diffsplit <args>|endif
+
+" - パッチコマンドの設定 -----------------------------------------------------
+set patchexpr=MyPatch()
+function! MyPatch()
+   :call system($VIM."\\'.'patch -o " . v:fname_out . " " . v:fname_in . " < " . v:fname_diff)
+endfunction
+
+" - ViewFugitiveStatusLine() -------------------------------------------------
+function! ViewFugitiveStatusLine()
+  let x = ""
+  if exists('g:loaded_fugitive')
+    let w = fugitive#statusline()
+    if w != '[]'
+      let x = w
+    endif
+  endif
+  return x
+endfunction
+
+" - ViewDebugMode() -------------------------------------------------------
+"  ステータスラインに、Vimの設定した値を表示
+let g:debugmode = 0
+function! ViewDebugMode()
+  let x = ""
+  if g:debugmode == 1
+    let x = x . "IME=" . &iminsert
+    let x = x . "," . "MODE=" . mode()
+
+    let x = "[" . x . "]"
+  endif
+  return x
+endfunction
+
+" - StartDebugMode() --------------------------------------------------------
+"  デバッグモード開始
+function! StartDebugMode()
+  let g:debugmode = 1
+endfunction
+
+" - EndDebugMode() ----------------------------------------------------------
+"  デバッグモード停止
+function! EndDebugMode()
+  let g:debugmode = 0
+endfunction
+
+" - FencB() ------------------------------------------------------------------
+"  カーソル上の文字コードをエンコードに応じた表示にする
+function! FencB()
+  let c = matchstr(getline('.'), '.', col('.') - 1)
+  let c = iconv(c, &enc, &fenc)
+  return s:Byte2hex(s:Str2byte(c))
+endfunction
+
+function! s:Str2byte(str)
+  return map(range(len(a:str)), 'char2nr(a:str[v:val])')
+endfunction
+
+function! s:Byte2hex(bytes)
+  return join(map(copy(a:bytes), 'printf("%02X", v:val)'), '')
+endfunction
+
+"-----------------------------------------------------------------------------
 " 検索ワードをセットする。
 " 何か追加パラメータが設定されていたら、単語単位検索に。
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
 function! MySetSearch(cmd, ...)
   let saved_reg = @"
   if a:cmd != ''
@@ -403,21 +454,9 @@ function! MySetSearch(cmd, ...)
   let @" = saved_reg
 endfunction 
 
-""""""""""""""""""""""""""""""
-" ファイルを開いたら前回のカーソル位置へ移動
-" $VIMRUNTIME/vimrc_example.vim
-""""""""""""""""""""""""""""""
-augroup vimrcEx
-  autocmd!
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line('$') |
-    \   exe "normal! g`\"" |
-    \ endif
-augroup END
-
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
 " 挿入モード時、ステータスラインのカラー変更
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
 let g:hi_insert = 'highlight StatusLine guifg=darkblue guibg=darkyellow gui=none ctermfg=blue ctermbg=yellow cterm=none'
 
 if has('syntax')
@@ -447,9 +486,9 @@ function! s:GetHighlight(hi)
   return hl
 endfunction
 
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
 " 全角スペースを表示
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
 " コメント以外で全角スペースを指定しているので、scriptencodingと、
 " このファイルのエンコードが一致するよう注意！
 " 強調表示されない場合、ここでscriptencodingを指定するとうまくいく事があります。
@@ -467,9 +506,9 @@ if has('syntax')
   augroup END
 endif
 
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
 " grep,tagsのためカレントディレクトリをファイルと同じディレクトリに移動する
-""""""""""""""""""""""""""""""
+"-----------------------------------------------------------------------------
 if exists('+autochdir')
   "autochdirがある場合カレントディレクトリを移動
   set autochdir
@@ -478,10 +517,10 @@ else
   au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
 endif
 
-"----------------------------------------
+"=============================================================================
 " 各種プラグイン設定
-"----------------------------------------
-" - neobundle ---------------------------
+"=============================================================================
+" - neobundle ----------------------------------------------------------------
 filetype off
 
 if has('vim_starting')
@@ -495,12 +534,23 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Recommended to install
 " After install, turn shell $MY_VIMRUNTIME/bundle/vimproc, (n,g)make -f your_machines_makefile
-NeoBundle 'Shougo/vimproc'
+NeoBundle 'Shougo/vimproc', {
+      \ 'build' : {
+      \     'windows' : 'make -f make_mingw32.mak',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
 
 " github repos
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Sixeight/unite-grep'
+NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tpope/vim-surround'
@@ -508,11 +558,9 @@ NeoBundle 'ujihisa/quickrun'
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'kana/vim-textobj-indent'
 NeoBundle 'vim-scripts/grep.vim'
-NeoBundle 'Sixeight/unite-grep'
-NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'vim-scripts/Flex-4'
-NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'LeafCage/lcpeek.vim'
 
 " vim-scripts repos
 
@@ -526,22 +574,18 @@ filetype plugin indent on " Required!
 " Installation check
 NeoBundleCheck
 
-" - neocomplcache -----------------------
+" - neocomplcache ------------------------------------------------------------
 let g:neocomplcache_enable_at_startup = 1
 
-" - netrw -------------------------------
+" - netrw --------------------------------------------------------------------
 let g:netrw_home = $HOME
 
-" - NERDTree ----------------------------
+" - NERDTree -----------------------------------------------------------------
 " <F3>でNERDTree起動
 " 備考：トグルでカレントバッファのディレクトリが開けないため、下記の設定で対処
 nnoremap <silent> <F3> :<C-u>NERDTree %:p:h<CR>
 " NERDTree上でのキーマッピング
-augroup NERDTreeKeyMapping
-  autocmd!
-  autocmd FileType nerdtree call s:nerdtree_my_settings()
-augroup END
-
+autocmd MySetting FileType nerdtree call s:nerdtree_my_settings()
 function! s:nerdtree_my_settings()
   " F3,ESCキーを押すと終了する
   nmap <silent><buffer> <F3> :<C-u>q<CR>
@@ -554,7 +598,7 @@ let NERDTreeShowHidden=1
 " ファイルを開いたら、NERDTreeのウィンドウを閉じる
 let NERDTreeQuitOnOpen=1
 
-" - Unite -------------------------------
+" - Unite --------------------------------------------------------------------
 nnoremap <silent> <Leader>uf :<C-u>UniteWithBufferDir file<CR>
 nnoremap <silent> <Leader>ufi :<C-u>Unite file_include<CR>
 nnoremap <silent> <Leader>ufm :<C-u>Unite file_mru<CR>
@@ -572,12 +616,8 @@ nnoremap <silent> <Leader>uo :<C-u>Unite outline<CR>
 nnoremap <silent> <Leader>utg :<C-u>Unite -immediately -no-start-insert tags:<C-r>=expand('<cword>')<CR><CR>
 nnoremap <silent> <Leader>utf :<C-u>Unite tags/file<CR>
 
-
 " unite.vim上でのキーマッピング
-augroup UniteKeyMapping
-  autocmd!
-  autocmd FileType unite call s:unite_my_settings()
-augroup END
+autocmd MySetting FileType unite call s:unite_my_settings()
 
 function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
@@ -587,6 +627,6 @@ function! s:unite_my_settings()
   imap <silent><buffer> <ESC> <ESC>:<C-u>q<CR>
 endfunction
 
-"----------------------------------------
+"=============================================================================
 " 一時設定
-"----------------------------------------
+"=============================================================================

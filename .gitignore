@@ -19,3 +19,9 @@
 /xxd.exe
 /vimfiles/pluginjp
 /vimfiles/bundle
+cmp.exe
+diff3.exe
+libiconv2.dll
+libintl3.dll
+patch.exe
+sdiff.exe
