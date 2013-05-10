@@ -1,8 +1,8 @@
 "=============================================================================
 "    Description: .vimrc設定
 "         Author: Takashi Ichimura
-"  Last Modified: 2013-05-09
-"        Version: 2.00
+"  Last Modified: 2013-05-09 19:00
+"        Version: 2.00.001
 "=============================================================================
 set nocompatible
 scriptencoding utf-8
