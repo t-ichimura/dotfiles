@@ -232,6 +232,11 @@ nnoremap N Nzz
 "nnoremap # #zz
 "nnoremap g* g*zz
 "nnoremap g# gnzz
+" ウィンドウ分割コマンド
+command! -nargs=* -complete=command Sk aboveleft <args>
+command! -nargs=* -complete=command Sj belowright <args>
+command! -nargs=* -complete=command Sh vertical aboveleft <args>
+command! -nargs=* -complete=command Sl vertical belowright <args>
 " ウィンドウ分割(方向・サイズ指定可能)
 nmap <Space>sj <SID>(split-to-j)
 nmap <Space>sk <SID>(split-to-k)
