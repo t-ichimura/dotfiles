@@ -98,7 +98,10 @@ endif
 " pluginを使用可能にする
 filetype plugin indent on
 " 挿入及び改行時にコメントを自動入力しない
-autocmd FileType * set formatoptions-=ro
+augroup MyKeyMapping
+  autocmd!
+  autocmd FileType * set formatoptions-=ro
+augroup END
 
 "----------------------------------------
 " 検索
@@ -534,7 +537,11 @@ let g:netrw_home = $HOME
 " 備考：トグルでカレントバッファのディレクトリが開けないため、下記の設定で対処
 nnoremap <silent> <F3> :<C-u>NERDTree %:p:h<CR>
 " NERDTree上でのキーマッピング
-autocmd FileType nerdtree call s:nerdtree_my_settings()
+augroup NERDTreeKeyMapping
+  autocmd!
+  autocmd FileType nerdtree call s:nerdtree_my_settings()
+augroup END
+
 function! s:nerdtree_my_settings()
   " F3,ESCキーを押すと終了する
   nmap <silent><buffer> <F3> :<C-u>q<CR>
@@ -567,7 +574,11 @@ nnoremap <silent> <Leader>utf :<C-u>Unite tags/file<CR>
 
 
 " unite.vim上でのキーマッピング
-autocmd FileType unite call s:unite_my_settings()
+augroup UniteKeyMapping
+  autocmd!
+  autocmd FileType unite call s:unite_my_settings()
+augroup END
+
 function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
