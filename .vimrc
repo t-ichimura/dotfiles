@@ -232,11 +232,20 @@ nnoremap N Nzz
 "nnoremap # #zz
 "nnoremap g* g*zz
 "nnoremap g# gnzz
-" ウィンドウ分割コマンド
-command! -nargs=* -complete=command Sk aboveleft <args>
-command! -nargs=* -complete=command Sj belowright <args>
-command! -nargs=* -complete=command Sh vertical aboveleft <args>
-command! -nargs=* -complete=command Sl vertical belowright <args>
+
+" ウィンドウ操作
+nnoremap <silent> <Leader>ww <C-w>w
+nnoremap <silent> <Leader>wc <C-w>c
+nnoremap <silent> <Leader>wh <C-w>h
+nnoremap <silent> <Leader>wj <C-w>j
+nnoremap <silent> <Leader>wk <C-w>k
+nnoremap <silent> <Leader>wl <C-w>l
+nnoremap <silent> <Leader>wH <C-w>H
+nnoremap <silent> <Leader>wJ <C-w>J
+nnoremap <silent> <Leader>wK <C-w>K
+nnoremap <silent> <Leader>wL <C-w>L
+nnoremap <silent> <Leader>w= <C-w>=
+nnoremap <silent> <Leader>wq <C-w>q
 " ウィンドウ分割(方向・サイズ指定可能)
 nmap <Space>sj <SID>(split-to-j)
 nmap <Space>sk <SID>(split-to-k)
@@ -246,18 +255,12 @@ nnoremap <SID>(split-to-j) :<C-u>execute 'belowright' (v:count == 0 ? '' : v:cou
 nnoremap <SID>(split-to-k) :<C-u>execute 'aboveleft'  (v:count == 0 ? '' : v:count) 'split'<CR>
 nnoremap <SID>(split-to-h) :<C-u>execute 'topleft'    (v:count == 0 ? '' : v:count) 'vsplit'<CR>
 nnoremap <SID>(split-to-l) :<C-u>execute 'botright'   (v:count == 0 ? '' : v:count) 'vsplit'<CR>
+
 " 検索後のヒットワードをquickfixへ表示
 "nmap <unique> g/ :exec ':vimgrep /' . getreg('/') . '/j %\|cwin'<CR>
 nmap g/ :exec ':vimgrep /' . getreg('/') . '/j %\|cwin'<CR>
 " 移動でカーソルを中央に表示(EOF移動時は最下行表示)
 nnoremap <silent> G :<C-u>call CursorPositioningWhenMoving()<CR>
-function! CursorPositioningWhenMoving()
-  if v:count > 0
-    call feedkeys(v:count . "\<C-End>zz")
-  else
-    call feedkeys("\<C-End>z-")
-  endif
-endfunction
 
 " l を <Right>に置き換えても、折りたたみを l で開くことができるようにする
 if has('folding')
@@ -309,6 +312,15 @@ vnoremap $ g_
 " 検索パターンで / or ? の入力時に\を付与する 
 cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
 cnoremap <expr> ?  getcmdtype() == '?' ? '\?' : '?'
+
+"=============================================================================
+" コマンド
+"=============================================================================
+" ウィンドウ分割コマンド
+command! -nargs=* -complete=command Sk aboveleft <args>
+command! -nargs=* -complete=command Sj belowright <args>
+command! -nargs=* -complete=command Sh vertical aboveleft <args>
+command! -nargs=* -complete=command Sl vertical belowright <args>
 
 "=============================================================================
 " オートコマンド・関数定義
@@ -522,6 +534,16 @@ else
   au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
 endif
 
+" - CursorPositioningWhenMoving() --------------------------------------------
+" 移動でカーソルを中央に表示(EOF移動時は最下行表示)
+function! CursorPositioningWhenMoving()
+  if v:count > 0
+    call feedkeys(v:count . "\<C-End>zz")
+  else
+    call feedkeys("\<C-End>z-")
+  endif
+endfunction
+
 "=============================================================================
 " 各種プラグイン設定
 "=============================================================================
@@ -566,6 +588,7 @@ NeoBundle 'vim-scripts/grep.vim'
 NeoBundle 'vim-scripts/Flex-4'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'LeafCage/lcpeek.vim'
+NeoBundle 'tyru/coolgrep.vim'
 
 " vim-scripts repos
 
@@ -631,6 +654,7 @@ function! s:unite_my_settings()
   nmap <silent><buffer> <ESC> :<C-u>q<CR>
   imap <silent><buffer> <ESC> <ESC>:<C-u>q<CR>
 endfunction
+
 
 "=============================================================================
 " 一時設定
