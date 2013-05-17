@@ -349,15 +349,17 @@ augroup vimrcEx
 augroup END
 
 " - vimrc,gvimrc設定変更後に再読み込み ---------------------------------------
-if !has('gui_running') && !(has('win32') || has('win64'))
-    " .vimrcの再読込時にも色が変化するようにする
-    autocmd MySetting BufWritePost $MYVIMRC nested source $MYVIMRC
-else
-    " .vimrcの再読込時にも色が変化するようにする
-    autocmd MySetting BufWritePost $MYVIMRC source $MYVIMRC | 
-                \if has('gui_running') | source $MYGVIMRC  
-    autocmd MySetting BufWritePost $MYGVIMRC if has('gui_running') | source $MYGVIMRC
-endif
+" ※有効にすると、:NeoBundleCleanが正常に動作しないので、コメントアウト
+"   設定ファイルの反映は、手動で行うようにする。
+"if !has('gui_running') && !(has('win32') || has('win64'))
+"    " .vimrcの再読込時にも色が変化するようにする
+"    autocmd MySetting BufWritePost $MYVIMRC nested source $MYVIMRC
+"else
+"    " .vimrcの再読込時にも色が変化するようにする
+"    autocmd MySetting BufWritePost $MYVIMRC source $MYVIMRC | 
+"                \if has('gui_running') | source $MYGVIMRC  
+"    autocmd MySetting BufWritePost $MYGVIMRC if has('gui_running') | source $MYGVIMRC
+"endif
 
 " - diffの設定 ---------------------------------------------------------------
 if has('win32') || has('win64')
