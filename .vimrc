@@ -1,8 +1,8 @@
 "=============================================================================
 "    Description: .vimrc設定
 "         Author: Takashi Ichimura
-"  Last Modified: 2013-05-09 19:00
-"        Version: 2.00.001
+"  Last Modified: 2013-05-17
+"        Version: 2.00.002
 "=============================================================================
 set nocompatible
 scriptencoding utf-8
@@ -574,7 +574,6 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Sixeight/unite-grep'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'mattn/zencoding-vim'
@@ -591,6 +590,7 @@ NeoBundle 'LeafCage/lcpeek.vim'
 NeoBundle 'tyru/coolgrep.vim'
 
 " vim-scripts repos
+NeoBundle 'vcscommand.vim'
 
 " Non github repos
 
